@@ -1,1 +1,15 @@
-.env
+```
+# Test and coverage reports
+.coverage
+htmlcov/
+coverage/
+*.coverage
+*.cover
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+```
