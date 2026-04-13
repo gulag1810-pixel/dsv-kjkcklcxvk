@@ -1,15 +1,1 @@
-```
-# Test and coverage reports
-.coverage
-htmlcov/
-coverage/
-*.coverage
-*.cover
-
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-```
+Nothing should be ignored based on the provided file changes. The only modified file is 'tests/test_database.py', which is a Python source code file and should not be added to .gitignore.

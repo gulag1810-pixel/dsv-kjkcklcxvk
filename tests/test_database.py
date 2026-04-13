@@ -10,26 +10,13 @@ from sqlalchemy import select, delete, Integer, String
 import re
 
 # Импортируем модели и функции
-from models import User
+from models import User, Base
 from UserCrud import user_create, user_delete, user_get, get_all, delete_by_list
 from core import init_db
 
 
 # === Конфигурация тестовой БД ===
 TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/test_telegram_bot"
-
-
-class TestBase(DeclarativeBase):
-    pass
-
-
-# Создаем отдельную модель User для тестов с уникальным tablename
-class TestUserModelDef(TestBase):
-    __tablename__ = "test_users"
-    
-    user_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    username: Mapped[str] = mapped_column(String, nullable=False)
-    user_email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
 
 
 @pytest.fixture(scope="session")
@@ -45,15 +32,15 @@ async def test_engine():
     """Создание тестового движка и таблиц."""
     engine = create_async_engine(TEST_DATABASE_URL, echo=False)
     
-    # Создаем таблицы для тестовой модели
+    # Создаем все таблицы из основной модели (включая users)
     async with engine.begin() as conn:
-        await conn.run_sync(TestBase.metadata.create_all)
+        await conn.run_sync(Base.metadata.create_all)
     
     yield engine
     
     # Удаляем таблицы после тестов
     async with engine.begin() as conn:
-        await conn.run_sync(TestBase.metadata.drop_all)
+        await conn.run_sync(Base.metadata.drop_all)
     
     await engine.dispose()
 
